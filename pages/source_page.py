@@ -1,5 +1,5 @@
 from .base_page import BasePage
-from .locators import SourcePageLocators, ImagePageLocators
+from .locators import SourcePageLocators
 from selenium.webdriver.common.keys import Keys
 
 
@@ -30,22 +30,3 @@ class SourcePage(BasePage):
     def click_to_image_link(self):
         image_link = self.browser.find_element(*SourcePageLocators.IMAGES_LINK)
         image_link.click()
-
-
-class ImagePage(BasePage):
-    def should_be_correct_url(self):
-        new_window = self.browser.window_handles[1]
-        self.browser.switch_to.window(new_window)
-        assert "https://yandex.ru/images/" in self.browser.current_url, "This URL is not 'https://yandex.ru/images/'"
-
-    def click_to_first_category(self):
-        first_category = self.browser.find_element(*ImagePageLocators.FIRST_CATEGORY)
-        first_category.click()
-
-    def should_be_source_image_request(self):
-        assert self.browser.find_element(*ImagePageLocators.CATEGORY_NAME), "This category is not presented in search-line"
-
-    def go_to_first_picture(self):
-        first_picture = self.browser.find_element(*ImagePageLocators.FIRST_IMAGE)
-        first_picture.click()
-
