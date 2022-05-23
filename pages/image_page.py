@@ -1,3 +1,5 @@
+from selenium.webdriver import ActionChains
+
 from .base_page import BasePage
 from .locators import ImagePageLocators
 
@@ -13,7 +15,9 @@ class ImagePage(BasePage):
         first_category.click()
 
     def should_be_source_image_request(self):
-        assert self.browser.find_element(*ImagePageLocators.CATEGORY_NAME), "This category is not presented in search-line"
+        category_name = self.browser.find_element(*ImagePageLocators.CATEGORY_NAME)
+        category_name_value = category_name.get_attribute("class")
+        assert category_name_value != "input__clear mini-suggest__input-clear", "This category is not presented in search-line"
 
     def go_to_first_picture(self):
         first_picture = self.browser.find_element(*ImagePageLocators.FIRST_IMAGE)
@@ -28,6 +32,8 @@ class ImagePage(BasePage):
 
     def remember_picture(self):
         picture = self.browser.find_element(*ImagePageLocators.IMAGE_OPENED)
+        action_chains = ActionChains(self.browser)
+        action_chains.context_click(picture).perform()
         picture_src = picture.get_attribute("src")
         return picture_src
 
@@ -39,7 +45,4 @@ class ImagePage(BasePage):
         backward_icon.click()
 
     def should_be_same_pictures(self, firs_picture, second_picture):
-        """
-        ДОДЕЛАТЬ СЕЙЧАС!!!
-        """
         assert firs_picture == second_picture, "Pictures are not same"
